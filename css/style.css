@@ -1,0 +1,46 @@
+:root{
+    --pad-width: 100px;
+    --pad-height: 20px;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+}
+
+.main-container{
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 256px 1fr 256px;
+    background: lightblue;
+}
+
+.play-window{
+    position: relative;
+    grid-column: 2;
+    border: 1px solid red;
+}
+
+.ball{
+    position: absolute;
+    height: 30px;
+    aspect-ratio: 1/1;
+    background: rebeccapurple;
+    border-radius: 50%;
+}
+
+
+.pad{
+    position: absolute;
+    height: var(--pad-height);
+    width: var(--pad-width);
+    background: black;
+    top: calc(100% - var(--pad-height));
+}
