@@ -1,22 +1,7 @@
 const pad = document.querySelector(".pad");
-const gameWindow = document.querySelector(".play-window");
+const gameWindow = document.querySelector(".game");
 const ball = document.querySelector(".ball");
-
-// Ball properties:
-let ballWidth = ball.clientWidth;
-let ballHeight = ball.clientHeight;
-
-//pad left margin
-let padLeft = 0;
-
-// ball margins
-let ballTop = 0;
-let ballLeft = 0;
-
-// move flags
-let isMovingRight = false;
-let isMovingLeft = false;
-
+const ctx = gameWindow.getContext('2d');
 
 function keyPressedDonwn(e){
     
@@ -41,6 +26,23 @@ function keyReleased(e){
     }
 }
 
+drawPad();
+drawCircle();
+function drawPad(){
+    ctx.beginPath();
+    ctx.rect(0, 800-20, 100, 20);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function drawCircle(){
+    ctx.beginPath();
+    ctx.arc(75, 75, 10, 0, Math.PI*2, true);
+    ctx.closePath();
+    ctx.fill();
+}
+
+/*
 function moveBall(){
     console.log("why?")
     if((ballTop +1) < gameWindow.clientWidth){
@@ -64,7 +66,7 @@ function movePad(){
     }
     requestAnimationFrame(movePad)
 }
-
+*/
 requestAnimationFrame(movePad);
 requestAnimationFrame(moveBall);
 
