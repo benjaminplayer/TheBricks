@@ -22,25 +22,8 @@ html, body{
     background: lightblue;
 }
 
-.play-window{
-    position: relative;
+.game{
+    border: 1px solid;
     grid-column: 2;
-    border: 1px solid red;
-}
-
-.ball{
-    position: absolute;
-    height: 30px;
-    aspect-ratio: 1/1;
-    background: rebeccapurple;
-    border-radius: 50%;
-}
-
-
-.pad{
-    position: absolute;
-    height: var(--pad-height);
-    width: var(--pad-width);
-    background: black;
-    top: calc(100% - var(--pad-height));
+    justify-self: center;
 }
