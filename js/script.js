@@ -3,15 +3,33 @@ const gameWindow = document.querySelector(".game");
 const ball = document.querySelector(".ball");
 const ctx = gameWindow.getContext('2d');
 
-let x = 75, y= 75, dx = 10, dy = 5;
-let recx = 100, recy = 20, recdx = 10;
+
+//Parameter delcaration
+let x = 300, y= 275, dx = 10, dy = 5; //ball
+let recx = 0, recy = 780, recdx = 10, recWidth = 200, recHeight = 20; //paddle
+
+//bricks
+let bricks;
+let nrows = 5;
+let ncols = 5;
+let brickWidth = (gameWindow.width / ncols) - 1;
+let brickHeight = 15;
+let padding = 1;
+let activeBricks = 0;
+
+//Move flags
+let isMovingLeft = false, isMovingRight = false;
+
+let animationFrame;
+
+
 function keyPressedDonwn(e){
     
-    if(e.keyCode === 65 && padLeft-5 >= 0){
+    if(e.keyCode === 65){
         isMovingRight = true;
     }
 
-    if(e.keyCode === 68 && padLeft+105 <= gameWindow.clientWidth){
+    if(e.keyCode === 68){
         isMovingLeft = true;
     }
     //a d: 65 68
@@ -28,69 +46,116 @@ function keyReleased(e){
     }
 }
 
-drawPad();
-//drawCircle();
-
-requestAnimationFrame(moveBall);
+initBricks();
+function initBricks(){
+    bricks = new Array(nrows)
+    for(let i = 0 ; i < bricks.length; i ++){
+        bricks[i] = new Array(ncols)
+        for(let j = 0; j < bricks[i].length; j++){
+            bricks[i][j] = 1;
+            activeBricks++;
+        }
+    }
+    console.log(bricks);
+}
 
 function drawPad(){
-    ctx.beginPath();
-    ctx.closePath();
-    ctx.fill();
+    ctx.rect(recx, recy, recWidth, recHeight);
 }
 
-/*function drawCircle(){
-    ctx.beginPath();
-    ctx.arc(75, 75, 10, 0, Math.PI*2, true);
-    ctx.closePath();
-    ctx.fill();
-}*/
-
-function moveBall(){
-    ctx.reset();
-    ctx.beginPath();
+function drawBall(){
     ctx.arc(x, y, 10, 0, Math.PI*2, true);
-    ctx.rect(0, 800-20, recx, 20);
-    ctx.closePath();
-    ctx.fill();
-
-    if(x+5 > gameWindow.width || x-5 < 0) 
-        dx *= -1;
-    if(y-5 < 0 || y+5 > gameWindow.height)
-        dy *=-1;
-    x += dx;
-    y += dy;
-
-    requestAnimationFrame(moveBall);
 }
 
-/*
-function moveBall(){
-    console.log("why?")
-    if((ballTop +1) < gameWindow.clientWidth){
-        ballTop +=1;
-        ball.style.top = ballTop +"px";
+function drawBricks(){
+    for(let i = 0 ; i < bricks.length; i ++){
+        for(let j = 0; j < bricks[i].length; j++)
+            if(bricks[i][j] == 1)
+                ctx.rect((j*(brickWidth + padding))+padding, (i*(brickHeight + padding))+padding, brickWidth, brickHeight);
     }
-    requestAnimationFrame(moveBall);
-
 }
 
 function movePad(){
+    if((recx + recWidth < gameWindow.width) && isMovingLeft)
+        recx += recdx
+    
+    if((recx + recdx > 0) && isMovingRight)
+        recx -= recdx;
 
-    if(isMovingLeft && padLeft+101 <= gameWindow.clientWidth){
-        padLeft += 1;
-        pad.style.left = padLeft + "px";
-    }
-
-    if(isMovingRight && padLeft-1 >=0){
-        padLeft += -1;
-        pad.style.left = padLeft +"px";
-    }
-    requestAnimationFrame(movePad)
 }
-*/
-requestAnimationFrame(movePad);
-requestAnimationFrame(moveBall);
+
+function moveBall(){
+    console.log(animationFrame);
+    if(x+5 > gameWindow.width || x-5 < 0) 
+        dx *= -1;
+    
+    if(y - 10 < 0){
+        dy *=-1;
+    }
+
+    /*if(y - 10 < 0 || y+5 > gameWindow.height){
+        dy *=-1;
+    }*/
+
+}
+
+function isWon(){
+    return (activeBricks == 0) ? true : false;
+}
+
+function isOutOfBounds(){
+    return (y-10 > gameWindow.height);
+}
+
+function breakBricks(){
+    let rowheigth = brickHeight + padding;
+    let colwidth = brickWidth + padding;
+    let row = Math.floor(y/rowheigth);
+    let col = Math.floor(x/colwidth);
+
+    if (y < nrows * rowheigth && row >=0 && col >=0 && bricks[row][col]== 1){
+        dy *=-1;
+        bricks[row][col] = 0;
+        activeBricks--;
+        console.log(activeBricks);
+    }
+}
+
+requestAnimationFrame(update);
+function update(){
+    ctx.reset();
+    ctx.beginPath();
+
+    drawBall();
+    drawPad();
+    drawBricks();
+
+    ctx.closePath();
+    ctx.fill();
+
+    //movement
+    movePad();
+    moveBall();
+    
+    //paddle collison
+    if((x > recx && x < recx+recWidth) && (y + dy - 10 > recy-recHeight))
+        dy *= -1;
+
+    breakBricks();
+
+    if(isWon())
+        console.log("gg");
+
+    x += dx;
+    y += dy;
+    
+    if(isOutOfBounds()){
+        cancelAnimationFrame(animationFrame);
+        return;
+    }
+
+    animationFrame = requestAnimationFrame(update);
+}
 
 document.addEventListener("keydown",keyPressedDonwn,false);
 document.addEventListener("keyup",keyReleased,false);
