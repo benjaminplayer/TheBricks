@@ -4,24 +4,39 @@ const ball = document.querySelector(".ball");
 const ctx = gameWindow.getContext('2d');
 
 
+//TODO: Increase rock size, fix background, make a better website
+
 //Parameter delcaration
 let x = 300, y= 275, dx = 10, dy = 5; //ball
-let recx = 0, recy = 780, recdx = 10, recWidth = 200, recHeight = 20; //paddle
+let recx = 0, recy = 740, recdx = 10, recWidth = 200, recHeight = 20; //paddle
+let ballWidth = 24*1.5, ballHeight = 25*1.5;
 
 //bricks
 let bricks;
 let nrows = 5;
-let ncols = 5;
+let ncols = 29;
 let brickWidth = (gameWindow.width / ncols) - 1;
 let brickHeight = 15;
-let padding = 1;
+let padding = 5;
 let activeBricks = 0;
-
 //Move flags
 let isMovingLeft = false, isMovingRight = false;
 
-let animationFrame;
+//sprites
+const tear = new Image();
+const rock = new Image();
+let background = new Image();
 
+tear.src = 'sprites/Troll_Bomb.png';
+rock.src = 'sprites/Rock.png'
+background.src = 'sprites/BasementRoom.png';
+
+//sprite Values
+let rockWidth = 24 *1.5;
+let rockHeight = 25 * 1.5;
+
+
+let animationFrame;
 
 function keyPressedDonwn(e){
     
@@ -46,7 +61,6 @@ function keyReleased(e){
     }
 }
 
-initBricks();
 function initBricks(){
     bricks = new Array(nrows)
     for(let i = 0 ; i < bricks.length; i ++){
@@ -56,11 +70,12 @@ function initBricks(){
             activeBricks++;
         }
     }
-    console.log(bricks);
 }
 
 function drawPad(){
+    ctx.fillStype = "white";
     ctx.rect(recx, recy, recWidth, recHeight);
+    ctx.fillStyle = "black";
 }
 
 function drawBall(){
@@ -70,8 +85,10 @@ function drawBall(){
 function drawBricks(){
     for(let i = 0 ; i < bricks.length; i ++){
         for(let j = 0; j < bricks[i].length; j++)
-            if(bricks[i][j] == 1)
-                ctx.rect((j*(brickWidth + padding))+padding, (i*(brickHeight + padding))+padding, brickWidth, brickHeight);
+            if(bricks[i][j] == 1){
+                //ctx.rect((j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight);
+                ctx.drawImage(rock, (j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight)
+            }
     }
 }
 
@@ -85,18 +102,16 @@ function movePad(){
 }
 
 function moveBall(){
-    console.log(animationFrame);
     if(x+5 > gameWindow.width || x-5 < 0) 
         dx *= -1;
     
-    if(y - 10 < 0){
-        dy *=-1;
-    }
-
-    /*if(y - 10 < 0 || y+5 > gameWindow.height){
+    /*if(y - 10 < 0){
         dy *=-1;
     }*/
 
+    if(y - 10 < 0 || y+5 > gameWindow.height){
+        dy *=-1;
+    }
 }
 
 function isWon(){
@@ -108,8 +123,8 @@ function isOutOfBounds(){
 }
 
 function breakBricks(){
-    let rowheigth = brickHeight + padding;
-    let colwidth = brickWidth + padding;
+    let rowheigth = rockHeight + padding;
+    let colwidth = rockWidth + padding;
     let row = Math.floor(y/rowheigth);
     let col = Math.floor(x/colwidth);
 
@@ -117,28 +132,28 @@ function breakBricks(){
         dy *=-1;
         bricks[row][col] = 0;
         activeBricks--;
-        console.log(activeBricks);
     }
 }
 
-requestAnimationFrame(update);
 function update(){
     ctx.reset();
     ctx.beginPath();
-
-    drawBall();
+    drawBackground();
+    //drawBall();
+    drawSprite();
     drawPad();
     drawBricks();
-
     ctx.closePath();
     ctx.fill();
 
+
     //movement
     movePad();
-    moveBall();
+    //moveBall();
+    moveSprite();
     
     //paddle collison
-    if((x > recx && x < recx+recWidth) && (y + dy - 10 > recy-recHeight))
+    if((x > recx && x < recx+recWidth) && (y + dy +(ballHeight/2) > recy-recHeight))
         dy *= -1;
 
     breakBricks();
@@ -149,13 +164,43 @@ function update(){
     x += dx;
     y += dy;
     
-    if(isOutOfBounds()){
+    /*if(isOutOfBounds()){
         cancelAnimationFrame(animationFrame);
         return;
-    }
+    }*/
 
     animationFrame = requestAnimationFrame(update);
 }
+
+function initGame(){
+    initBricks();
+    requestAnimationFrame(update);
+}
+
+function drawSprite(){
+    ctx.drawImage(tear,x ,y , 24*1.5, 25*1.5);
+}
+
+function drawBackground(){
+    ctx.drawImage(background,0,0,gameWindow.width,gameWindow.height);
+}
+
+
+function moveSprite(){
+    if(x+ballWidth> gameWindow.width || x-ballWidth < 0) 
+        dx *= -1;
+    
+    /*if(y - 10 < 0){
+        dy *=-1;
+    }*/
+
+    if(y - ballHeight < 0 || y+ballHeight > gameWindow.height){
+        dy *=-1;
+    }
+
+}
+
+initGame();
 
 document.addEventListener("keydown",keyPressedDonwn,false);
 document.addEventListener("keyup",keyReleased,false);
