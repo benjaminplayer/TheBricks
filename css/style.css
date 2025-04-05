@@ -31,4 +31,5 @@ html, body{
     border: 1px solid;
     grid-column: 2;
     justify-self: center;
+    align-self: center;
 }

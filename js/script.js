@@ -8,13 +8,13 @@ const ctx = gameWindow.getContext('2d');
 
 //Parameter delcaration
 let x = 300, y= 275, dx = 10, dy = 5; //ball
-let recx = 0, recy = 740, recdx = 10, recWidth = 200, recHeight = 20; //paddle
+let recx = 256, recy = 800-61, recdx = 10, recWidth = 256, recHeight = 20; //paddle
 let ballWidth = 24*1.5, ballHeight = 25*1.5;
 
 //bricks
 let bricks;
-let nrows = 5;
-let ncols = 29;
+let nrows = 4;
+let ncols;
 let brickWidth = (gameWindow.width / ncols) - 1;
 let brickHeight = 15;
 let padding = 5;
@@ -25,15 +25,18 @@ let isMovingLeft = false, isMovingRight = false;
 //sprites
 const tear = new Image();
 const rock = new Image();
-let background = new Image();
+const background = new Image();
+const platform = new Image();
 
-tear.src = 'sprites/Troll_Bomb.png';
-rock.src = 'sprites/Rock.png'
-background.src = 'sprites/BasementRoom.png';
+
+tear.src = 'sprites/Troll_Bomb64x64.png';
+rock.src = 'sprites/Rock64x64.png'
+background.src = 'sprites/Basement.png';
+platform.src = 'sprites/platform.png';
 
 //sprite Values
-let rockWidth = 24 *1.5;
-let rockHeight = 25 * 1.5;
+let rockWidth = 64;
+let rockHeight = 64;
 
 
 let animationFrame;
@@ -62,6 +65,8 @@ function keyReleased(e){
 }
 
 function initBricks(){
+    ncols = Math.floor(gameWindow.width / rockWidth) - 1;
+    console.log(nrows);
     bricks = new Array(nrows)
     for(let i = 0 ; i < bricks.length; i ++){
         bricks[i] = new Array(ncols)
@@ -74,7 +79,8 @@ function initBricks(){
 
 function drawPad(){
     ctx.fillStype = "white";
-    ctx.rect(recx, recy, recWidth, recHeight);
+    //ctx.rect(recx, recy, recWidth, recHeight);
+    ctx.drawImage(platform,recx, recy, 256, 61);
     ctx.fillStyle = "black";
 }
 
@@ -178,7 +184,7 @@ function initGame(){
 }
 
 function drawSprite(){
-    ctx.drawImage(tear,x ,y , 24*1.5, 25*1.5);
+    ctx.drawImage(tear,x ,y , 42, 42);
 }
 
 function drawBackground(){
@@ -187,14 +193,14 @@ function drawBackground(){
 
 
 function moveSprite(){
-    if(x+ballWidth> gameWindow.width || x-ballWidth < 0) 
+    if(x+ballWidth> gameWindow.width || (x - ballWidth/2) + 20 < 0) 
         dx *= -1;
     
     /*if(y - 10 < 0){
         dy *=-1;
     }*/
 
-    if(y - ballHeight < 0 || y+ballHeight > gameWindow.height){
+    if(y - (ballHeight/2) +20 < 0 || y+ballHeight > gameWindow.height){
         dy *=-1;
     }
 
