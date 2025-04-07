@@ -17,6 +17,7 @@ html, body{
 body{
     font-family: 'Upheaval TT (BRK)', sans-serif;
     font-size: 24px;
+    background: url("../sprites/Planks.jpg");
 }
 
 header{
@@ -28,6 +29,7 @@ header{
 main{
     display: grid;
     justify-items: center;
+    margin-top: 2rem;
 }
 
 .playContainer{
@@ -35,20 +37,25 @@ main{
     width: 281px;
     height: 386px;
     background: url("../sprites/PosterIsaac.png");
+    transform: rotate(6deg);
 }
 
 a{
     color: black;
+    text-decoration: none;
 }
 
-.play{
+.options{
     position: absolute;
+    display: flex;
+    flex-direction: column;
     left: 40%;
     top: 8%;
     transition: ease-in-out 100ms;
+    gap: 2rem;
 }
 
-.play:hover{
+.play:hover, .info:hover{
     cursor: pointer;
     transform: scale(1.1);
     transition: ease-in-out 100ms;

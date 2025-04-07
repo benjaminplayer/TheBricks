@@ -4,13 +4,13 @@ const ball = document.querySelector(".ball");
 const ctx = gameWindow.getContext('2d');
 
 
-//TODO: Increase rock size, fix background, make a better website
+//TODO: make a better website, dodaj backgrounds, dodaj item pickups, naredi da start when key pressed
 
 //Parameter delcaration
 let x = 300, y= 275, dx = 10, dy = 5; //ball
-let recx = 256, recy = 800-61, recdx = 10, recWidth = 256, recHeight = 20; //paddle
+let recx, recy = 800-61, recdx = 10, recWidth = 256, recHeight = 20; //paddle
 let ballWidth = 24*1.5, ballHeight = 25*1.5;
-
+recx = (gameWindow.width/2) - recWidth/2;
 //bricks
 let bricks;
 let nrows = 4;
@@ -159,13 +159,18 @@ function update(){
     moveSprite();
     
     //paddle collison
-    if((x > recx && x < recx+recWidth) && (y + dy +(ballHeight/2) > recy-recHeight))
+    if((x >= recx && x <= recx+recWidth) && ((y + dy +(ballHeight/2) > recy-recHeight))){
+        dx = 15 * ((x-(recx+recWidth/2))/recWidth);
         dy *= -1;
+    }
 
     breakBricks();
 
-    if(isWon())
+    if(isWon()){
         console.log("gg");
+        cancelAnimationFrame(animationFrame);
+        return;
+    }
 
     x += dx;
     y += dy;
