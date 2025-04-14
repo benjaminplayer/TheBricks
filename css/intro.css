@@ -1,5 +1,8 @@
 @import url('https://fonts.cdnfonts.com/css/upheaval');
-
+@font-face {
+    font-family: 'isaac-letters';
+    src: url('../fonts/IsaacGame.ttf');
+}
 /*
     
 */
@@ -18,12 +21,15 @@ body{
     font-family: 'Upheaval TT (BRK)', sans-serif;
     font-size: 24px;
     background: url("../sprites/Planks.jpg");
+    display: grid;
+    grid-template-rows: 32px, 1fr 32px;
 }
 
 header{
     display: flex;
     width: 100%;
     justify-content: center;
+    color: rgb(255, 255, 255);
 }
 
 main{
@@ -41,11 +47,13 @@ main{
 }
 
 a{
-    color: black;
+    color: #473B3D;
     text-decoration: none;
 }
 
 .options{
+    font-family: 'isaac-letters';
+    color: #473B3D;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -59,4 +67,10 @@ a{
     cursor: pointer;
     transform: scale(1.1);
     transition: ease-in-out 100ms;
+}
+
+footer{
+    font-size: 22px;
+    align-self: last baseline;
+    color: rgb(201, 201, 201);
 }

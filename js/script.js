@@ -2,7 +2,10 @@ const pad = document.querySelector(".pad");
 const gameWindow = document.querySelector(".game");
 const ball = document.querySelector(".ball");
 const ctx = gameWindow.getContext('2d');
-
+const overlay = document.querySelector('.overlay');
+const pauseMenu = document.querySelector('.pause');
+const pauseContinueButton = pauseMenu.children[1];
+const pauseExitButton = pauseMenu.children[2];
 
 //TODO: make a better website, dodaj backgrounds, dodaj item pickups, naredi da start when key pressed
 
@@ -20,7 +23,7 @@ let brickHeight = 15;
 let padding = 5;
 let activeBricks = 0;
 //Move flags
-let isMovingLeft = false, isMovingRight = false;
+let isMovingLeft = false, isMovingRight = false, isPaused = false;
 
 //sprites
 const tear = new Image();
@@ -43,6 +46,8 @@ let animationFrame;
 
 function keyPressedDonwn(e){
     
+    console.log(e.keyCode);
+
     if(e.keyCode === 65){
         isMovingRight = true;
     }
@@ -51,6 +56,16 @@ function keyPressedDonwn(e){
         isMovingLeft = true;
     }
     //a d: 65 68
+
+    if(e.keyCode == 80 || e.keyCode == 27)
+        if(!isPaused)
+            isPaused = true;
+        else{
+            isPaused = false;
+            pauseMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            requestAnimationFrame(update);
+        }
 
 }
 
@@ -125,7 +140,7 @@ function isWon(){
 }
 
 function isOutOfBounds(){
-    return (y-10 > gameWindow.height);
+    return (y + ballHeight > gameWindow.height);
 }
 
 function breakBricks(){
@@ -142,6 +157,18 @@ function breakBricks(){
 }
 
 function update(){
+    console.log(y)
+    if(isPaused){
+
+        pauseMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        if(animationFrame)
+            cancelAnimationFrame(animationFrame);
+        
+        return;
+
+    }
+
     ctx.reset();
     ctx.beginPath();
     drawBackground();
@@ -172,13 +199,15 @@ function update(){
         return;
     }
 
+
     x += dx;
     y += dy;
     
-    /*if(isOutOfBounds()){
+    if(isOutOfBounds()){
+        console.log("outOfBounds")
         cancelAnimationFrame(animationFrame);
         return;
-    }*/
+    }
 
     animationFrame = requestAnimationFrame(update);
 }
@@ -215,3 +244,9 @@ initGame();
 
 document.addEventListener("keydown",keyPressedDonwn,false);
 document.addEventListener("keyup",keyReleased,false);
+pauseContinueButton.addEventListener("click", () =>{
+    isPaused = false;
+    pauseMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+    requestAnimationFrame(update);
+});
