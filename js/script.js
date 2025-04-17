@@ -23,7 +23,7 @@ let brickHeight = 15;
 let padding = 5;
 let activeBricks = 0;
 //Move flags
-let isMovingLeft = false, isMovingRight = false, isPaused = false;
+let isMovingLeft = false, isMovingRight = false, isPaused = false, lost = false;
 
 //sprites
 const tear = new Image();
@@ -58,9 +58,9 @@ function keyPressedDonwn(e){
     //a d: 65 68
 
     if(e.keyCode == 80 || e.keyCode == 27)
-        if(!isPaused)
+        if(!isPaused && !lost)
             isPaused = true;
-        else{
+        else if(!lost){
             isPaused = false;
             pauseMenu.classList.toggle('active');
             overlay.classList.toggle('active');
@@ -204,7 +204,9 @@ function update(){
     y += dy;
     
     if(isOutOfBounds()){
+        lost = true;
         console.log("outOfBounds")
+        console.log(lost);
         cancelAnimationFrame(animationFrame);
         return;
     }
