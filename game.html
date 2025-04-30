@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Bricks</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="pause">
         <div>PAUSED</div>
@@ -13,9 +15,30 @@
         <div><a href="index.html">Exit game</a></div>
     </div>
     <div class="overlay"></div>
-    <div class="main-container">
-        <canvas class="game" width="1200" height="800"></canvas>
+    <div class="grid-container">
+        <aside>
+            <div class="life">
+                <div>
+                    -LIFE-
+                </div>
+                <div class="hearts">
+                    <img src="sprites/HeartCropped.png" alt="" class="heart">
+                    <img src="sprites/HeartCropped.png" alt="" class="heart">
+                    <img src="sprites/HeartCropped.png" alt="" class="heart">
+                </div>
+            </div>
+            <div class="space-item">
+                <div>
+                    <img src="sprites/SpaceBox.png" alt="">
+                    <img src="" alt="" class="card">
+                </div>
+            </div>
+        </aside>
+        <div class="main-container">
+            <canvas class="game" width="1200" height="800"></canvas>
+        </div>
     </div>
     <script src="js/script.js"></script>
 </body>
+
 </html>

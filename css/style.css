@@ -76,12 +76,46 @@ html, body{
     transition: ease-in-out 100ms;
 }
 
-.main-container{
+.grid-container{
     width: 100%;
     height: 100%;
-
     display: grid;
     grid-template-columns: 256px 1fr 256px;
+}
+
+aside{
+    position: relative;
+    background: #1b1818;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.life {
+    font-family: 'Upheaval TT (BRK)', sans-serif;
+    font-size: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #a72525;
+  }  
+
+.space-item{
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.card{
+    position: relative;
+    left: -75px;
+    bottom: 15px;
+}
+
+.main-container{
+    align-self: center;
+    justify-self: center;
 }
 
 .game{

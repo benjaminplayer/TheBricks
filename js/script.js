@@ -6,15 +6,20 @@ const overlay = document.querySelector('.overlay');
 const pauseMenu = document.querySelector('.pause');
 const pauseContinueButton = pauseMenu.children[1];
 const pauseExitButton = pauseMenu.children[2];
+const heldCard = document.querySelector('.card');
+const heartsContainer = document.querySelector('.hearts');
+let hearts = Array.from(document.querySelectorAll('.heart'));
+//TODO: make a better website, dodaj backgrounds, naredi da start when key pressed
 
-//TODO: make a better website, dodaj backgrounds, dodaj item pickups, naredi da start when key pressed
-
-//Parameter delcaration
+//#region Parameter delcaration
 let x = 300, y= 275, dx = 10, dy = 5; //ball
 let recx, recy = 800-61, recdx = 10, recWidth = 256, recHeight = 20; //paddle
 let ballWidth = 24*1.5, ballHeight = 25*1.5;
 recx = (gameWindow.width/2) - recWidth/2;
-//bricks
+let lives = 3;
+//#endregion
+
+//#region bricks
 let bricks;
 let nrows = 4;
 let ncols;
@@ -22,31 +27,45 @@ let brickWidth = (gameWindow.width / ncols) - 1;
 let brickHeight = 15;
 let padding = 5;
 let activeBricks = 0;
-//Move flags
-let isMovingLeft = false, isMovingRight = false, isPaused = false, lost = false;
+//#endregion
 
-//sprites
+//#region Move flags
+let isMovingLeft = false, isMovingRight = false, isPaused = false, lost = false;
+//#endregion
+
+//#region Sprites
 const tear = new Image();
 const rock = new Image();
 const background = new Image();
 const platform = new Image();
-
+const tintedRock = new Image();
 
 tear.src = 'sprites/Troll_Bomb64x64.png';
 rock.src = 'sprites/Rock64x64.png'
 background.src = 'sprites/Basement.png';
 platform.src = 'sprites/platform.png';
+tintedRock.src = 'sprites/TintedRock.png';
+//#endregion
 
-//sprite Values
+//#region sprite Values
 let rockWidth = 64;
 let rockHeight = 64;
+//#endregion
 
+let cards = [];
+let cdy = 1;
+let cardHeld = false;
+//#region Randomness Values [%]
+let tintedRockRandom = 10;
+let loversRandom = 20;
+let hierophantRandom = 100;
+//#endregion
 
 let animationFrame;
 
 function keyPressedDonwn(e){
     
-    console.log(e.keyCode);
+    //console.log(e.keyCode);
 
     if(e.keyCode === 65){
         isMovingRight = true;
@@ -57,7 +76,7 @@ function keyPressedDonwn(e){
     }
     //a d: 65 68
 
-    if(e.keyCode == 80 || e.keyCode == 27)
+    if(e.keyCode == 80 || e.keyCode == 27){
         if(!isPaused && !lost)
             isPaused = true;
         else if(!lost){
@@ -66,6 +85,15 @@ function keyPressedDonwn(e){
             overlay.classList.toggle('active');
             requestAnimationFrame(update);
         }
+    }
+
+    if(e.keyCode == 67){
+        addSoulHearts();
+    }
+
+    if(e.keyCode == 32 && cardHeld){
+        useCard();
+    }
 
 }
 
@@ -81,15 +109,20 @@ function keyReleased(e){
 
 function initBricks(){
     ncols = Math.floor(gameWindow.width / rockWidth) - 1;
-    console.log(nrows);
+    //console.log(nrows);
     bricks = new Array(nrows)
     for(let i = 0 ; i < bricks.length; i ++){
         bricks[i] = new Array(ncols)
         for(let j = 0; j < bricks[i].length; j++){
-            bricks[i][j] = 1;
+            if(Math.floor(Math.random()*101) <= tintedRockRandom)
+                bricks[i][j] = 2;
+            else
+                bricks[i][j] = 1;
             activeBricks++;
         }
     }
+
+    console.log(bricks);
 }
 
 function drawPad(){
@@ -105,11 +138,16 @@ function drawBall(){
 
 function drawBricks(){
     for(let i = 0 ; i < bricks.length; i ++){
-        for(let j = 0; j < bricks[i].length; j++)
+        for(let j = 0; j < bricks[i].length; j++){
             if(bricks[i][j] == 1){
                 //ctx.rect((j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight);
-                ctx.drawImage(rock, (j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight)
+                ctx.drawImage(rock, (j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight);
             }
+            else if(bricks[i][j] == 2){
+                ctx.drawImage(tintedRock, (j*(rockWidth + padding))+padding, (i*(rockHeight + padding))+padding, rockWidth, rockHeight);
+            }
+        }
+
     }
 }
 
@@ -149,7 +187,11 @@ function breakBricks(){
     let row = Math.floor(y/rowheigth);
     let col = Math.floor(x/colwidth);
 
-    if (y < nrows * rowheigth && row >=0 && col >=0 && bricks[row][col]== 1){
+    if (y < nrows * rowheigth && row >=0 && col >=0 && bricks[row][col] >= 1){
+        if(bricks[row][col] == 2){
+            spawnCard(x, y);
+        }
+        
         dy *=-1;
         bricks[row][col] = 0;
         activeBricks--;
@@ -157,7 +199,6 @@ function breakBricks(){
 }
 
 function update(){
-    console.log(y)
     if(isPaused){
 
         pauseMenu.classList.toggle('active');
@@ -169,6 +210,8 @@ function update(){
 
     }
 
+    console.log("lives", lives);
+
     ctx.reset();
     ctx.beginPath();
     drawBackground();
@@ -178,7 +221,6 @@ function update(){
     drawBricks();
     ctx.closePath();
     ctx.fill();
-
 
     //movement
     movePad();
@@ -193,22 +235,30 @@ function update(){
 
     breakBricks();
 
+    if(cards.length !=0){
+        moveCard();
+        collectCard();
+    }
+
     if(isWon()){
         console.log("gg");
         cancelAnimationFrame(animationFrame);
         return;
     }
 
-
     x += dx;
     y += dy;
     
     if(isOutOfBounds()){
-        lost = true;
-        console.log("outOfBounds")
-        console.log(lost);
-        cancelAnimationFrame(animationFrame);
-        return;
+        console.log("OutOfBoundz:", lives);
+        removeHealth();
+
+        if(lives == 0){
+            lost = true;
+            cancelAnimationFrame(animationFrame);
+            return;
+        }
+
     }
 
     animationFrame = requestAnimationFrame(update);
@@ -227,7 +277,6 @@ function drawBackground(){
     ctx.drawImage(background,0,0,gameWindow.width,gameWindow.height);
 }
 
-
 function moveSprite(){
     if(x+ballWidth> gameWindow.width || (x - ballWidth/2) + 20 < 0) 
         dx *= -1;
@@ -242,6 +291,145 @@ function moveSprite(){
 
 }
 
+function removeHealth(){
+    console.log("Remove");
+    console.log(hearts);
+    for(let i = hearts.length - 1; i >=0; i--){
+        if(hearts[i].classList.contains('soul')){
+            if(hearts[i].classList.contains('half')){
+                heartsContainer.removeChild(hearts[i]);
+                lives--;
+                hearts.splice(i,1);
+                return;
+            }
+
+            hearts[i].src = "sprites/SoulHeartHalf.png";
+            hearts[i].classList.add('half');
+            lives--;
+            return;
+
+        }
+        
+        if(hearts[i].classList.contains('lost')) continue;
+
+        hearts[i].src = 'sprites/GreyHeart.png';
+        hearts[i].classList.add('lost');
+        lives--;
+        return;
+    }
+
+}
+
+function gainHealth(){
+    for(let i = 0; i < hearts.length; i++){
+        if(hearts[i].classList.contains('lost')){
+            hearts[i].classList.remove('lost');
+            lives++;
+            hearts[i].src = 'sprites/HeartCropped.png';
+            break;
+        }
+    }
+}
+
+function addSoulHearts(){
+    let soulHeart = document.createElement('img');
+    soulHeart.src = 'sprites/soulHeart.png';
+    soulHeart.classList.add('heart','soul');
+    heartsContainer.append(soulHeart);
+    lives += 2;
+    hearts.push(soulHeart);
+}
+
+function spawnBombs(){
+    let bombSprite = new Image();
+
+    bomb = {
+        img: bombSprite,
+        x,
+        y
+    }
+}
+
+function spawnCard(entryX, entryY){
+    let cardType;
+    let random = Math.floor(Math.random()*101);
+    console.log(random);
+    const cardSprite = new Image;
+
+    if(random <= loversRandom){
+        cardSprite.src = 'sprites/VITheLovers.png';
+        cardType = "lovers";
+    }
+    else if(random <= hierophantRandom){
+        cardSprite.src = 'sprites/VTheHierophant.png';
+        cardType = "hierophant";
+    }else{
+        cardSprite.src = 'sprites/XVITheTower.png';
+        cardType = "tower";
+    }
+
+    let card = { //naredi nov object card, v katerega shrani vrednosti
+        type: cardType,
+        img: cardSprite,
+        x: entryX,
+        y: entryY,
+        height: 64,
+        width: 50
+    };
+
+    console.log("Spawned a card: ",card)
+
+    cards.push(card); // karto doda v array aktivnih kart
+}
+
+function moveCard(){
+    for (let card of cards) {
+        card.y = card.y + cdy;
+        ctx.drawImage(card.img, card.x ,card.y - cdy);
+    }
+}
+
+function useCard(){
+    let card = document.querySelector('.card');
+    if(card.classList.contains('lovers')){
+        if(!(lives < 2)) return;
+        card.classList.remove('lovers');
+        gainHealth();
+        gainHealth();
+    }
+    else if(card.classList.contains('hierophant')){
+        if(lives == 19) return;
+        addSoulHearts();   
+        addSoulHearts();   
+    }
+    else if(card.classList.contains('tower')){
+        spawnBombs();
+    }
+    card.src = '';
+    cardHeld = false;
+
+}
+
+function collectCard(){
+
+    for(let i = cards.length -1 ; i >= 0; i--){
+        let card = cards[i];
+
+        if(!cardHeld && card.x < recx + recWidth && card.x + card.width > recx && card.y < recy + recHeight && card.y + card.height > recy){
+            cardHeld = true;
+            heldCard.src = card.img.src;
+            heldCard.classList.add(card.type);
+            console.log("Collected a card!");
+            cards.splice(i, 1); //odstrani pobrano karto
+        }
+    }
+
+}
+
+function despawnCard(){
+    cards = cards.filter(card => card.y <= gameWindow.height); // filtrira vn vse karte, ki so offscreen
+}
+
 initGame();
 
 document.addEventListener("keydown",keyPressedDonwn,false);
@@ -251,4 +439,4 @@ pauseContinueButton.addEventListener("click", () =>{
     pauseMenu.classList.toggle('active');
     overlay.classList.toggle('active');
     requestAnimationFrame(update);
-});
+}); 
