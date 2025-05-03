@@ -69,6 +69,97 @@ a{
     transition: ease-in-out 100ms;
 }
 
+.info-container{
+    position: fixed;
+    background: url('../sprites/PosterIsaac.png');
+    width: 281px;
+    height: 386px;
+    max-height: 386px;
+    transform: rotate(-6deg) scale(1.1);
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr 2fr 1fr;
+    padding-bottom: 2.2rem;
+}
+.info-header{
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-header > div:first-child{
+    padding-left: 1rem;
+    padding-top: .5rem;
+}
+
+.info-header > div:last-child{
+    display: flex;
+    justify-content: center;
+}
+
+.info-header > div:first-child{
+    font-size: 16px;
+}
+
+
+.info-content > span{
+    padding-left: 1.2rem;
+}
+
+.info-content.controlls{
+    padding: 0 1.5rem;
+}
+
+.info-content.controlls ul{
+    list-style: none;
+}
+
+.info-content.controlls ul li{
+    padding: 0 1rem;
+}
+
+
+.cards.desc{
+    display: grid;
+    grid-template-rows: 1fr 2fr;
+    row-gap: 1rem;
+    padding: 0 1rem;
+}
+
+.cards.desc >div:first-child{
+    align-self: center;
+    justify-self: center;
+}
+
+.rocks.desc{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 1rem;
+    font-size: 24px;
+    padding: 0 1rem;
+}
+
+.rocks.desc >div:first-child, .rocks.desc>div:nth-child(3){
+    align-self: center;
+}
+
+.rocks.desc > div:nth-child(2) > span, .rocks.desc > div:last-child > span{
+    font-size: 16px;
+}
+
+.cards.desc > div:nth-child(2) > span{
+    font-size: 16px;
+}
+
+.pages{
+    align-self: last baseline;
+    padding: 0 1.5rem;
+    display: flex;
+    font-size: 16px;
+    justify-content: space-between;
+}
+
 footer{
     font-size: 22px;
     align-self: last baseline;

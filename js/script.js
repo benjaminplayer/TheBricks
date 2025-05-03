@@ -332,12 +332,24 @@ function gainHealth(){
 }
 
 function addSoulHearts(){
+    if (lives+2 > 19) return;
     let soulHeart = document.createElement('img');
-    soulHeart.src = 'sprites/soulHeart.png';
-    soulHeart.classList.add('heart','soul');
-    heartsContainer.append(soulHeart);
+    if(lives%2 == 0 && hearts[hearts.length-1].classList.contains('soul')){
+        hearts[hearts.length-1].classList.remove('half');
+        hearts[hearts.length-1].src = 'sprites/soulHeart.png';
+        soulHeart.src = 'sprites/SoulHeartHalf.png';
+        soulHeart.classList.add('heart','soul','half');
+
+    }else{
+        soulHeart.src = 'sprites/soulHeart.png';
+        soulHeart.classList.add('heart','soul');
+    }
+    
     lives += 2;
+    heartsContainer.append(soulHeart);
     hearts.push(soulHeart);
+    console.log(hearts);
+
 }
 
 function spawnBombs(){
