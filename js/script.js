@@ -361,7 +361,7 @@ function addSoulHearts(){
         soulHeart.classList.add('heart','soul','half');
 
     }else{
-        soulHeart.src = 'sprites/soulHeart.png';
+        soulHeart.src = 'sprites/SoulHeart.png';
         soulHeart.classList.add('heart','soul');
     }
     
