@@ -23,7 +23,7 @@ html, body{
 }
 
 body{
-    background: url('/sprites/Planks.jpg');
+    background: url('../sprites/Planks.jpg');
 }
 
 .pause{
