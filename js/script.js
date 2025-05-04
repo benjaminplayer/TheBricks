@@ -356,7 +356,7 @@ function addSoulHearts(){
     let soulHeart = document.createElement('img');
     if(lives%2 == 0 && hearts[hearts.length-1].classList.contains('soul')){
         hearts[hearts.length-1].classList.remove('half');
-        hearts[hearts.length-1].src = 'sprites/soulHeart.png';
+        hearts[hearts.length-1].src = 'sprites/SoulHeart.png';
         soulHeart.src = 'sprites/SoulHeartHalf.png';
         soulHeart.classList.add('heart','soul','half');
 
