@@ -8,6 +8,10 @@ const pauseContinueButton = pauseMenu.children[1];
 const pauseExitButton = pauseMenu.children[2];
 const heldCard = document.querySelector('.card');
 const heartsContainer = document.querySelector('.hearts');
+const gameOverScreen = document.querySelector('.gameOverScreen');
+const gameOverReplay = document.querySelector('.replay');
+const audioTag = document.querySelector('.main-theme');
+const pickupAudio = document.querySelector('.pickup');
 let hearts = Array.from(document.querySelectorAll('.heart'));
 //TODO: make a better website, dodaj backgrounds, naredi da start when key pressed
 
@@ -53,19 +57,25 @@ let rockHeight = 64;
 //#endregion
 
 let cards = [];
-let cdy = 1;
+let cdy = 2;
 let cardHeld = false;
 //#region Randomness Values [%]
 let tintedRockRandom = 10;
-let loversRandom = 20;
-let hierophantRandom = 100;
-//#endregion
+let loversRandom = 10;
+let hierophantRandom = 20;
+//#endregiondd
+
+let isAudioPlaying = false;
 
 let animationFrame;
 
 function keyPressedDonwn(e){
     
     //console.log(e.keyCode);
+    if(!isAudioPlaying){
+        playAudio();
+        isAudioPlaying = true;
+    }
 
     if(e.keyCode === 65){
         isMovingRight = true;
@@ -75,6 +85,9 @@ function keyPressedDonwn(e){
         isMovingLeft = true;
     }
     //a d: 65 68
+
+    /*if(e.keyCode === 66)
+        playAudio();*/
 
     if(e.keyCode == 80 || e.keyCode == 27){
         if(!isPaused && !lost)
@@ -255,6 +268,13 @@ function update(){
 
         if(lives == 0){
             lost = true;
+            gameOverScreen.classList.toggle("active");
+            overlay.classList.toggle("active");
+            audioTag.pause();
+            audioTag.currentTime = 0;
+            audioTag.children[0].src = `audio/19 Hereafter.mp3`;
+            audioTag.load();
+            playAudio();
             cancelAnimationFrame(animationFrame);
             return;
         }
@@ -352,16 +372,6 @@ function addSoulHearts(){
 
 }
 
-function spawnBombs(){
-    let bombSprite = new Image();
-
-    bomb = {
-        img: bombSprite,
-        x,
-        y
-    }
-}
-
 function spawnCard(entryX, entryY){
     let cardType;
     let random = Math.floor(Math.random()*101);
@@ -376,8 +386,9 @@ function spawnCard(entryX, entryY){
         cardSprite.src = 'sprites/VTheHierophant.png';
         cardType = "hierophant";
     }else{
-        cardSprite.src = 'sprites/XVITheTower.png';
-        cardType = "tower";
+        /*cardSprite.src = 'sprites/XVITheTower.png';
+        cardType = "tower";*/
+        return;
     }
 
     let card = { //naredi nov object card, v katerega shrani vrednosti
@@ -428,6 +439,7 @@ function collectCard(){
         let card = cards[i];
 
         if(!cardHeld && card.x < recx + recWidth && card.x + card.width > recx && card.y < recy + recHeight && card.y + card.height > recy){
+            pickupAudio.play();
             cardHeld = true;
             heldCard.src = card.img.src;
             heldCard.classList.add(card.type);
@@ -444,6 +456,15 @@ function despawnCard(){
 
 initGame();
 
+function playAudio(){
+    audioTag.loop = true;
+    audioTag.volume = .4;
+    audioTag.play().catch(err => {
+        console.warn("Rejected:", err);
+    });
+}
+
+//#region Event Listeners
 document.addEventListener("keydown",keyPressedDonwn,false);
 document.addEventListener("keyup",keyReleased,false);
 pauseContinueButton.addEventListener("click", () =>{
@@ -451,4 +472,11 @@ pauseContinueButton.addEventListener("click", () =>{
     pauseMenu.classList.toggle('active');
     overlay.classList.toggle('active');
     requestAnimationFrame(update);
-}); 
+});
+
+gameOverReplay.addEventListener("click", () =>{
+    gameOverScreen.classList.toggle("active");
+    lost = false;
+    location.reload(); 
+});
+//#endregion

@@ -20,7 +20,7 @@ html, body{
 body{
     font-family: 'Upheaval TT (BRK)', sans-serif;
     font-size: 24px;
-    background: url("../sprites/Planks.jpg");
+    background: url("../sprites/e-mol-bg-menu-1.jpg");
     display: grid;
     grid-template-rows: 32px, 1fr 32px;
 }
@@ -77,10 +77,17 @@ a{
     max-height: 386px;
     transform: rotate(-6deg) scale(1.1);
     box-sizing: border-box;
-    display: grid;
+    display: none;
     grid-template-rows: 1fr 2fr 1fr;
     padding-bottom: 2.2rem;
+    font-family: 'isaac-letters';
+    color: #473B3D;
 }
+
+.info-container.active{
+    display: grid;
+}
+
 .info-header{
     padding-top: 1rem;
     display: flex;
@@ -90,6 +97,13 @@ a{
 .info-header > div:first-child{
     padding-left: 1rem;
     padding-top: .5rem;
+    user-select: none;
+}
+
+.info-header > div:first-child span:hover{
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease-in-out 100ms;
 }
 
 .info-header > div:last-child{
@@ -100,7 +114,6 @@ a{
 .info-header > div:first-child{
     font-size: 16px;
 }
-
 
 .info-content > span{
     padding-left: 1.2rem;
@@ -118,7 +131,6 @@ a{
     padding: 0 1rem;
 }
 
-
 .cards.desc{
     display: grid;
     grid-template-rows: 1fr 2fr;
@@ -133,18 +145,16 @@ a{
 
 .rocks.desc{
     display: grid;
-    grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 1fr;
-    row-gap: 1rem;
     font-size: 24px;
     padding: 0 1rem;
 }
 
-.rocks.desc >div:first-child, .rocks.desc>div:nth-child(3){
-    align-self: center;
+.rocks.desc >div:first-child{
+    justify-self: center;
 }
 
-.rocks.desc > div:nth-child(2) > span, .rocks.desc > div:last-child > span{
+.rocks.desc > div:nth-child(2) > span{
     font-size: 16px;
 }
 
@@ -160,8 +170,19 @@ a{
     justify-content: space-between;
 }
 
+.pages > div{
+    transition: ease-in-out 100ms;
+}
+
+.pages > div:hover{
+    cursor: pointer;
+    user-select: none;
+    transform: scale(1.1);
+    transition: ease-in-out 50ms;
+}
+
 footer{
     font-size: 22px;
     align-self: last baseline;
-    color: rgb(201, 201, 201);
+    color: rgb(39, 39, 39);
 }

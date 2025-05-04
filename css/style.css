@@ -22,6 +22,10 @@ html, body{
     height: 100%;
 }
 
+body{
+    background: url('/sprites/Planks.jpg');
+}
+
 .pause{
     position: fixed;
     display: none;
@@ -45,6 +49,53 @@ html, body{
 .pause a{
     text-decoration: none;
     color:#473B3D;
+}
+
+.gameOverScreen{
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+}
+
+.gameOverScreen.active{
+    display: flex;
+}
+
+.gameOverScreen > div{
+    position: relative;
+}
+
+.gameOverScreen > div:nth-child(1) > div:nth-child(2) {
+    position: absolute;
+    bottom: 180px;
+    width: 165px;
+    height: 60px;
+    left: 70%;
+    transform: rotate(-18deg);
+}
+
+.back-to-menu {
+    position: absolute;
+    width: 165px;
+    height: 68px;
+    bottom: 95px;
+    left: 74%;
+    transform: rotate(-18deg);
+}
+  
+.back-to-menu > a{
+    display: block;
+    height: 100%;
+    width: 100%;
+    text-decoration: none;
+}
+
+.gameOverScreen > div:nth-child(1) > div:nth-child(2):hover, .back-to-menu:hover{
+    cursor: pointer;
 }
 
 .overlay{
