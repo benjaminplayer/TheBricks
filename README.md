@@ -3,6 +3,9 @@
 
 A classic flash game, reworked into a classic game
 
+## Check out the original made by Edmund McMillen
+[Original on Steam](https://store.steampowered.com/app/113200/The_Binding_of_Isaac/) <br>
+All the textures and audio used belong to the original creator
 
 ## Languages used
 - HTML5
