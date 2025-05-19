@@ -186,3 +186,8 @@ footer{
     align-self: last baseline;
     color: rgb(39, 39, 39);
 }
+
+.headText{
+    font-size: 32px;
+    margin-top: 1rem;
+}
