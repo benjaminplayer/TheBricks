@@ -9,7 +9,7 @@ const pauseExitButton = pauseMenu.children[2];
 const heldCard = document.querySelector('.card');
 const heartsContainer = document.querySelector('.hearts');
 const gameOverScreen = document.querySelector('.gameOverScreen');
-const gameOverReplay = document.querySelector('.replay');
+const gameOverReplay = document.querySelectorAll('.replay');
 const audioTag = document.querySelector('.main-theme');
 const pickupAudio = document.querySelector('.pickup');
 let hearts = Array.from(document.querySelectorAll('.heart'));
@@ -62,7 +62,7 @@ let cardHeld = false;
 //#region Randomness Values [%]
 let tintedRockRandom = 10;
 let loversRandom = 10;
-let hierophantRandom = 20;
+let hierophantRandom = 70;
 //#endregiondd
 
 let isAudioPlaying = false;
@@ -255,6 +255,7 @@ function update(){
 
     if(isWon()){
         console.log("gg");
+        onWin();
         cancelAnimationFrame(animationFrame);
         return;
     }
@@ -269,6 +270,7 @@ function update(){
         if(lives == 0){
             lost = true;
             gameOverScreen.classList.toggle("active");
+            gameOverScreen.children[0].classList.toggle('active');
             overlay.classList.toggle("active");
             audioTag.pause();
             audioTag.currentTime = 0;
@@ -454,6 +456,11 @@ function despawnCard(){
     cards = cards.filter(card => card.y <= gameWindow.height); // filtrira vn vse karte, ki so offscreen
 }
 
+function onWin(){
+    let paper = gameOverScreen.children[1];
+    paper.classList.toggle('.active');
+}
+
 initGame();
 
 function playAudio(){
@@ -474,9 +481,19 @@ pauseContinueButton.addEventListener("click", () =>{
     requestAnimationFrame(update);
 });
 
-gameOverReplay.addEventListener("click", () =>{
-    gameOverScreen.classList.toggle("active");
-    lost = false;
-    location.reload(); 
+gameOverReplay.forEach(element => {
+
+    //console.log(element);
+
+    element.addEventListener("click", () =>{
+        gameOverScreen.classList.toggle("active");
+    Array.from(gameOverScreen.children).forEach(child => {
+        if (child.classList.contains('active')) {
+            child.classList.toggle('active');
+        }
+    });
+        lost = false;
+        location.reload(); 
+    });
 });
 //#endregion

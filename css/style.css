@@ -66,11 +66,19 @@ body{
     display: flex;
 }
 
-.gameOverScreen > div{
+.loss{
+    display: none;
+}
+
+.loss.active{
+    display: initial;
+}
+
+.gameOverScreen > .loss{
     position: relative;
 }
 
-.gameOverScreen > div:nth-child(1) > div:nth-child(2) {
+.gameOverScreen > .loss > div:nth-child(2) {
     position: absolute;
     bottom: 180px;
     width: 165px;
@@ -78,6 +86,100 @@ body{
     left: 70%;
     transform: rotate(-18deg);
 }
+
+.victory{
+    position: relative;
+    display: none;
+    font-family: 'isaac-letters';
+    color: #473B3D;
+}
+
+.victory.active{
+    display: initial;
+}
+
+.victory > .victory-txt{
+    position: absolute;
+    top: 0px;
+    margin: 2rem;
+}
+
+
+/* style.css | http://127.0.0.1:5500/css/style.css?_cacheOverride=1747641650367 */
+
+.victory > .victory-txt {
+  margin: 2rem 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.victory {
+  box-sizing: border-box;
+}
+
+/* Element | http://127.0.0.1:5500/game.html */
+
+.victory-txt > p:nth-child(1) {
+  position: relative;
+  left: 45%;
+}
+
+/* Element | http://127.0.0.1:5500/game.html */
+
+.replay.txt {
+  position: relative;
+  left: 20%;
+  top: 300px;
+  transform: rotate(-10deg);
+  display: inline-block;
+}
+
+/* Element | http://127.0.0.1:5500/game.html */
+
+.victory-txt > div:nth-child(3) {
+  position: relative;
+  display: inline-block;
+  left: 70%;
+  top: 300px;
+  transform: rotate(10deg);
+}
+
+/* Element | http://127.0.0.1:5500/game.html */
+
+.victory-txt > div:nth-child(3) > a:nth-child(1) {
+  text-decoration: none;
+  color: #473B3D;
+}
+
+.victory-txt > div:nth-child(3) > a:nth-child(1):hover{
+    cursor: pointer;
+}
+
+/* style.css | http://127.0.0.1:5500/css/style.css?_cacheOverride=1747642219812 */
+
+.victory-txt > p:nth-child(1) {
+  /* left: 45%; */
+  left: 38%;
+  font-size: 2rem;
+  display: inline-block;
+}
+
+.replay.txt {
+  /* position: relative; */
+  /* left: 20%; */
+  position: absolute;
+  left: 15%;
+  font-size: 2rem;
+}
+
+.victory-txt > div:nth-child(3) {
+  /* position: relative; */
+  /* left: 70%; */
+  position: absolute;
+  left: 58%;
+  font-size: 2rem;
+}
+
 
 .back-to-menu {
     position: absolute;
